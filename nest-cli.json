@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/cafeteriax-backend/src",
+  "compilerOptions": {
+    "deleteOutDir": true,
+    "webpack": true,
+    "tsConfigPath": "apps/cafeteriax-backend/tsconfig.app.json"
+  },
+  "monorepo": true,
+  "root": "apps/cafeteriax-backend",
+  "projects": {
+    "cafeteriax-backend": {
+      "type": "application",
+      "root": "apps/cafeteriax-backend",
+      "entryFile": "main",
+      "sourceRoot": "apps/cafeteriax-backend/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cafeteriax-backend/tsconfig.app.json"
+      }
+    },
+    "menu": {
+      "type": "application",
+      "root": "apps/menu",
+      "entryFile": "main",
+      "sourceRoot": "apps/menu/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/menu/tsconfig.app.json"
+      }
+    },
+    "orders": {
+      "type": "application",
+      "root": "apps/orders",
+      "entryFile": "main",
+      "sourceRoot": "apps/orders/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/orders/tsconfig.app.json"
+      }
+    },
+    "payments": {
+      "type": "application",
+      "root": "apps/payments",
+      "entryFile": "main",
+      "sourceRoot": "apps/payments/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/payments/tsconfig.app.json"
+      }
+    }
+  }
+}
