@@ -1,37 +1,100 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# cafeteria_x
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A distributed microservices-based backend and frontend application for managing the operations of a modern cafeteria. Built with scalability, modularity, and message-driven communication in mind using RabbitMQ, NestJS, and Vite.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Project Purpose
 
-## Project setup
+The **cafeteria_x** is a sample project designed to demonstrate the implementation of microservice architecture in a real-world scenario. It handles core cafeteria operations such as:
+
+* Order placement and tracking
+* Kitchen task management
+* Billing and payment processing
+* Notifications (email/SMS)
+* User authentication
+
+This project is intended to showcase how services can operate independently yet communicate efficiently via a message broker (RabbitMQ).
+
+---
+
+## Architecture Overview
+
+The system follows a **microservices architecture**, where each domain (ordering, billing, etc.) is a separate service that communicates via **RabbitMQ**.
+
+### Microservices:
+
+| Service                | Description                              | Technology Stack        |
+| ---------------------- | ---------------------------------------- | ----------------------- |
+| `order-service`        | Handles order intake and status          | NestJS, PostgreSQL      |
+| `kitchen-service`      | Manages preparation of orders            | NestJS, MongoDB         |
+| `billing-service`      | Manages payments, invoices               | NestJS, PostgreSQL      |
+| `notification-service` | Sends emails/SMS for updates             | NestJS, RabbitMQ        |
+| `auth-service`         | Manages user registration and login      | NestJS, PostgreSQL      |
+| `frontend`             | Web frontend for interacting with system | Vite, React, TypeScript |
+
+---
+
+## ⚙Tech Stack
+
+### Frontend
+
+* [Vite](https://vitejs.dev/)
+* [React](https://reactjs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [Tailwind CSS](https://tailwindcss.com/)
+
+### Backend
+
+* [NestJS](https://nestjs.com/) (per microservice)
+* [RabbitMQ](https://www.rabbitmq.com/) for inter-service communication
+* [PostgreSQL](https://www.postgresql.org/)
+* [MongoDB](https://www.mongodb.com/) ( for kitchen or event logs)
+
+### Dev Tools
+
+* Docker & Docker Compose
+* Prisma or TypeORM (per service)
+* ESLint, Prettier, Husky for linting & pre-commit hooks
+* Swagger (API documentation)
+
+---
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
 
 ```bash
-$ npm install
+git clone https://github.com/Alloysj/cafeteria_x.git
+cd cafeteria_x
 ```
 
-## Compile and run the project
+### 2. Start All Services via Docker
+
+```bash
+docker-compose up --build
+```
+
+This will start:
+
+* RabbitMQ (UI on [http://localhost:15672](http://localhost:15672))
+* PostgreSQL
+* MongoDB
+* All microservices (in progress)
+* Frontend (in progress)
+
+### 3. Access the Frontend
+
+Once it's built:
+
+```
+http://localhost:5173
+```
+
+### 4. Compile and run the project
 
 ```bash
 # development
@@ -44,55 +107,27 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+## Planned Features
 
-```bash
-# unit tests
-$ npm run test
+* Place and track orders
+* Assign orders to kitchen staff
+* Process payments
+* Real-time notifications
+* JWT-based authentication
+* Role-based access (admin, cashier, cook)
+* Admin dashboard (sales, orders, etc.)
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
-```
+## Contributing
 
-## Deployment
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change or improve.
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+---
 
 ## License
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+MIT License. See `LICENSE` file for details.
+
+---
+
