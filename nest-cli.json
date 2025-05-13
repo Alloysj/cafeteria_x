@@ -10,6 +10,15 @@
   "monorepo": true,
   "root": "apps/cafeteriax-backend",
   "projects": {
+    "api-gateway": {
+      "type": "application",
+      "root": "apps/api-gateway",
+      "entryFile": "main",
+      "sourceRoot": "apps/api-gateway/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/api-gateway/tsconfig.app.json"
+      }
+    },
     "cafeteriax-backend": {
       "type": "application",
       "root": "apps/cafeteriax-backend",

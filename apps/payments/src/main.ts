@@ -8,10 +8,14 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: ['amqp://localhost:5672'],
-      queue: 'orders_queue',
+      queue: 'payments_queue',
       queueOptions: { durable: false },
     },
+  
+
   });
   await app.listen();
+  console.log('Payments service is running...');
+  console.log('Listening on queue: payments_queue');
 }
 bootstrap();
