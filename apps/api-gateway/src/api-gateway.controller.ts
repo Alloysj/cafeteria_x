@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Inject, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ApiGatewayService } from './api-gateway.service';
+// import { ApiGatewayService } from './api-gateway.service';
 import { firstValueFrom } from 'rxjs';
 
 @Controller()
@@ -8,7 +8,8 @@ export class ApiGatewayController {
   constructor(
     @Inject('ORDERS_SERVICE') private readonly ordersClient: ClientProxy,
     @Inject('MENU_SERVICE') private readonly menuClient: ClientProxy,
-    @Inject('PAYMENT_SERVICE') private readonly paymentClient: ClientProxy
+    @Inject('PAYMENT_SERVICE') private readonly paymentClient: ClientProxy,
+    @Inject('USERS_SERVICE') private readonly usersClient: ClientProxy,
   ) {}
 
   @Post('order')
@@ -24,6 +25,11 @@ export class ApiGatewayController {
   @Post('payment')
   processPayment(@Body() data: any) {
     return this.paymentClient.send('process_payment', data);
+  }
+  @Post('api/register')
+  registerUser(@Body() data: any) {
+    console.log(data, 'Sending user...');
+    return this.usersClient.send('create_user', data);
   }
   @Get('test-order')
   async testOrder() {

@@ -32,6 +32,15 @@ import { ApiGatewayService } from './api-gateway.service';
           queue: 'payment_queue',
           queueOptions: { durable: false }
         }
+      },
+      {
+        name: 'USERS_SERVICE',
+        transport: Transport.RMQ,
+        options: {
+          urls: ['amqp://localhost:5672'],
+          queue: 'users_queue',
+          queueOptions: { durable: false }
+        }
       }
     ])
   ],

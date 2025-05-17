@@ -6,6 +6,7 @@ export class ApiGatewayService implements OnModuleInit {
   private ordersClient: ClientProxy;
   private menuClient: ClientProxy;
   private paymentsClient: ClientProxy;
+  private usersClient: ClientProxy;
 
   onModuleInit() {
     this.ordersClient = ClientProxyFactory.create({
@@ -34,6 +35,15 @@ export class ApiGatewayService implements OnModuleInit {
         queueOptions: { durable: false },
       },
     });
+
+    this.usersClient = ClientProxyFactory.create({
+      transport: Transport.RMQ,
+      options: {
+        urls: ['amqp://localhost:5672'],
+        queue: 'users_queue',
+        queueOptions: { durable: false },
+      },
+    });
   }
 
   // Example: Forward request to orders service
@@ -49,5 +59,12 @@ export class ApiGatewayService implements OnModuleInit {
   // Example: Process a payment
   processPayment(paymentDto: any) {
     return this.paymentsClient.send('process_payment', paymentDto);
+  }
+  // Example: Create a user
+  createUser(userDto: any) {
+    console.log(userDto, 'userDto');
+    // Log the user data
+    // Send the user data to the users service
+    return this.usersClient.send('create_user', userDto);
   }
 }
