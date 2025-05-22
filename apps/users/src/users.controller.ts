@@ -11,20 +11,28 @@ export class UsersController {
     console.log(data, 'Received user...');
     return this.usersService.createUser(data);
   }
+  @MessagePattern({ cmd: 'login_user' })
+  loginUser(data: { email: string; password: string }) {
+    console.log(data, 'Received login...');
+    return this.usersService.loginUser(data);
+  }
   @MessagePattern({ cmd: 'get_users' })
   getAllUsers() {
     return this.usersService.findAll();
   } 
-  @MessagePattern({ cmd: 'get_user_by_id' })
-  getUserById(data: any) {
-    return this.usersService.findById(data.id);
-  }
+
   @MessagePattern({ cmd: 'update_user' })
-  updateUser(data: any) {
-    return this.usersService.update(data.id, data);
-  } 
+  updateUser(payload: { id: string; data: any }) {
+    return this.usersService.updateUser(payload.id, payload.data);
+  }
+
   @MessagePattern({ cmd: 'delete_user' })
-  deleteUser(data: any) {
-    return this.usersService.delete(data.id);
-  } 
+  deleteUser(payload: { id: string }) {
+    return this.usersService.deleteUser(payload.id);
+  }
+
+  @MessagePattern({ cmd: 'get_user' })
+  getUserById(payload: { id: string }) {
+    return this.usersService.getUserById(payload.id);
+  }
 }

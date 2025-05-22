@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Inject, Get } from '@nestjs/common';
+import { Controller, Post, Body, Inject, Get, Put, Param, Delete } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -26,10 +26,32 @@ export class ApiGatewayController {
     return this.paymentClient.send({ cmd: 'process_payment' }, data);
   }
 
+  // User management endpoints
+
   @Post('api/register')
   registerUser(@Body() data: any) {
     console.log(data, 'Sending user...');
     return this.usersClient.send({ cmd: 'create_user' }, data);
+  }
+  @Post('api/login')
+  loginUser(@Body() data: any) {
+    console.log(data, 'Sending login...');
+    return this.usersClient.send({ cmd: 'login_user' }, data);
+  }
+
+  @Put('api/users/:id')
+  updateUser(@Param('id') id: string, @Body() data: any) {
+    return this.usersClient.send({ cmd: 'update_user' }, { id, data });
+  }
+
+  @Delete('api/users/:id')
+  deleteUser(@Param('id') id: string) {
+    return this.usersClient.send({ cmd: 'delete_user' }, { id });
+  }
+
+  @Get('api/users/:id')
+  getUserById(@Param('id') id: string) {
+    return this.usersClient.send({ cmd: 'get_user' }, { id });
   }
 
   @Get('test-order')

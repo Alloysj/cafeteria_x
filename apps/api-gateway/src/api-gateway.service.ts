@@ -22,9 +22,28 @@ export class ApiGatewayService {
   processPayment(paymentDto: any) {
     return this.paymentsClient.send({ cmd: 'process_payment' }, paymentDto);
   }
-
+ 
+  // User management services
   createUser(userDto: any) {
     console.log(userDto, 'userDto');
     return this.usersClient.send({ cmd: 'create_user' }, userDto);
+  }
+  loginUser(loginDto: any) {
+    return this.usersClient.send({ cmd: 'login_user' }, loginDto);
+  }
+
+  updateUser(id: string, data: any) {
+    return this.usersClient.send({ cmd: 'update_user' }, { id, data });
+  }
+
+  deleteUser(id: string) {
+    return this.usersClient.send({ cmd: 'delete_user' }, { id });
+  }
+
+  getUserById(id: string) {
+    return this.usersClient.send({ cmd: 'get_user' }, { id });
+  }
+  getAllUsers() {
+    return this.usersClient.send({ cmd: 'get_users' }, {});
   }
 }
