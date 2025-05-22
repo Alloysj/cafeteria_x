@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Inject, Get } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-// import { ApiGatewayService } from './api-gateway.service';
 import { firstValueFrom } from 'rxjs';
 
 @Controller()
@@ -14,23 +13,25 @@ export class ApiGatewayController {
 
   @Post('order')
   createOrder(@Body() data: any) {
-    return this.ordersClient.send('create_order', data);
+    return this.ordersClient.send({ cmd: 'create_order' }, data);
   }
 
   @Post('menu')
   addMenuItem(@Body() data: any) {
-    return this.menuClient.send('add_menu_item', data);
+    return this.menuClient.send({ cmd: 'add_menu_item' }, data);
   }
 
   @Post('payment')
   processPayment(@Body() data: any) {
-    return this.paymentClient.send('process_payment', data);
+    return this.paymentClient.send({ cmd: 'process_payment' }, data);
   }
+
   @Post('api/register')
   registerUser(@Body() data: any) {
     console.log(data, 'Sending user...');
-    return this.usersClient.send('create_user', data);
+    return this.usersClient.send({ cmd: 'create_user' }, data);
   }
+
   @Get('test-order')
   async testOrder() {
     const response = await firstValueFrom(
@@ -38,19 +39,20 @@ export class ApiGatewayController {
     );
     return response;
   }
+
   @Get('test-menu')
   async testMenu() {
     const response = await firstValueFrom(
-      this.menuClient.send('get_menu', {}),
+      this.menuClient.send({ cmd: 'get_menu' }, {}),
     );
     return response;
   }
+
   @Get('test-payment')
-  async testPayment() { 
+  async testPayment() {
     const response = await firstValueFrom(
-      this.paymentClient.send('get_payment', {}),
+      this.paymentClient.send({ cmd: 'get_payment' }, {}),
     );
     return response;
   }
 }
-
