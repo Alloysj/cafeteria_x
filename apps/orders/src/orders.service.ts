@@ -1,53 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { ClientProxyFactory, Transport, ClientProxy } from '@nestjs/microservices';
+import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class OrdersService {
-  private client: ClientProxy;
+  constructor(private prisma: PrismaService) {}
 
-  constructor() {
-    this.client = ClientProxyFactory.create({
-      transport: Transport.RMQ,
-      options: {
-        urls: ['amqp://localhost:5672'],
-        queue: 'payments_queue', // Name of the queue the other service is listening to
-      },
-    });
-  }
-
-  async createOrder(orderData: any) {
-    console.log('Sending order...');
-    return this.client.emit('order_created', orderData);
-  }
   create(data: any) {
-    return { id: Date.now(), ...data };
-  }
-  findAll() {
-    return [{ id: 1, item: 'Coffee' }];
-  }
-  findById(id: any) {
-    return { id, item: 'Coffee' };
-  }
-  update(id: any, data: any) {
-    return { id, ...data };
+    return this.prisma.order.create({ data });
   }
 
-  delete(id: any) {
-    return { message: `Order with id ${id} deleted` };
+  findAll() {
+    return this.prisma.order.findMany();
   }
-  findByCustomerId(customerId: any) {
-    return [{ id: 1, item: 'Coffee', customerId }];
+
+  findById(id: number) {
+    return this.prisma.order.findUnique({ where: { id } });
   }
-  findByStatus(status: any) {
-    return [{ id: 1, item: 'Coffee', status }];
+
+  update(id: number, data: any) {
+    return this.prisma.order.update({ where: { id }, data });
   }
-  findByDate(date: any) {
-    return [{ id: 1, item: 'Coffee', date }];
+
+  delete(id: number) {
+    return this.prisma.order.delete({ where: { id } });
   }
-  findByTotalAmount(amount: any) {
-    return [{ id: 1, item: 'Coffee', amount }];
+
+  findByCustomerId(customerId: number) {
+    return this.prisma.order.findMany({ where: { customerId } });
   }
-  findByPaymentMethod(method: any) {
-    return [{ id: 1, item: 'Coffee', method }];
+
+  findByStatus(status: string) {
+    return this.prisma.order.findMany({ where: { status } });
+  }
+
+  findByDate(date: Date) {
+    return this.prisma.order.findMany({ where: { createdAt: date } });
+  }
+
+  findByTotalAmount(amount: number) {
+    return this.prisma.order.findMany({ where: { totalAmount: amount } });
+  }
+
+  findByPaymentMethod(method: string) {
+    return this.prisma.order.findMany({ where: { paymentMethod: method } });
   }
 }
