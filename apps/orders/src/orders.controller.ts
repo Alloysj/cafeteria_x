@@ -13,7 +13,6 @@ export class OrdersController {
   }
   @MessagePattern({ cmd: 'get_orders' })
   getAllOrders() {
-    // return  {message: 'Orders service responding!'}
     return this.ordersService.findAll();
   }
   @MessagePattern({ cmd: 'get_order_by_id' })
