@@ -37,15 +37,40 @@ export class ApiGatewayController {
     return this.menuClient.send({ cmd: 'update_menu_item' }, data);
   }
 
-  
   @Post('menu')
   addMenuItem(@Body() data: any) {
     return this.menuClient.send({ cmd: 'add_menu_item' }, data);
   }
 
-  @Post('payment')
-  processPayment(@Body() data: any) {
+  // Payment management endpoints
+
+  @Post('api/payments')
+  processPayment(
+    @Body()
+    data: {
+      orderId: number;
+      amount: number;
+      method: string;
+      transactionId?: string;
+    },
+  ) {
     return this.paymentClient.send({ cmd: 'process_payment' }, data);
+  }
+
+  @Get('api/payments/:orderId')
+  getPayment(@Param('orderId') orderId: string) {
+    return this.paymentClient.send(
+      { cmd: 'get_payment' },
+      { orderId: Number(orderId) },
+    );
+  }
+
+  // POST /api/invoices → create invoice for a payment
+  @Post('api/invoices')
+  createInvoice(
+    @Body() data: { paymentId: number; number: string; details?: string },
+  ) {
+    return this.paymentClient.send({ cmd: 'create_invoice' }, data);
   }
 
   // User management endpoints
