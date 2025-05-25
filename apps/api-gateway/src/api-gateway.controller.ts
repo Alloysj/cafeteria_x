@@ -11,8 +11,9 @@ export class ApiGatewayController {
     @Inject('USERS_SERVICE') private readonly usersClient: ClientProxy,
   ) {}
 
-  @Post('order')
+  @Post('api/orders/create')
   createOrder(@Body() data: any) {
+    console.log(data, 'Received order...');
     return this.ordersClient.send({ cmd: 'create_order' }, data);
   }
 
