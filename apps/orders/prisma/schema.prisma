@@ -14,11 +14,14 @@ datasource db {
 }
 
 model Order {
-  id             Int      @id @default(autoincrement())
-  customerId     Int
-  item           String
-  status         String
-  totalAmount    Float
-  paymentMethod  String
-  createdAt      DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  customerId    Int      @map("customer_id")
+  item          String
+  status        String
+  totalAmount   Float    @map("total_amount")
+  paymentMethod String   @map("payment_method")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("orders") // <== THIS maps to the lowercase table you created manually
 }
+
