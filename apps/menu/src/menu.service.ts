@@ -1,62 +1,54 @@
 import { Injectable } from '@nestjs/common';
-
-export interface Menu {
-  id?: number;
-  name: string;
-  price: number;
-  category?: string;
-}
+import { PrismaService } from './prisma.service';
 
 @Injectable()
-export class MenuService {
-  create(data: Menu) {
-    // Simulate a database insert operation
-    const newMenuItem = { id: Date.now(), ...data };
-    return newMenuItem;
+export class KitchenService {
+  constructor(private readonly prisma: PrismaService) {}
+
+  async queueOrder(order: { orderId: number; item: string }) {
+    return this.prisma.kitchenOrder.create({
+      data: {
+        orderId: order.orderId,
+        item: order.item,
+        status: 'queued',
+      },
+    });
   }
-  findById(id: any) {
-    // Simulate a database find operation
-    const menuItem = { id, name: 'Coffee', price: 25 };
-    return menuItem;
+
+  async updateStatus(orderId: number, status: 'preparing' | 'ready') {
+    return this.prisma.kitchenOrder.updateMany({
+      where: { orderId },
+      data: { status, preparedAt: status === 'ready' ? new Date() : undefined },
+    });
   }
-  update(id: any, data: Menu) {
-    // Simulate a database update operation
-    const updatedMenuItem = { id, ...data };
-    return updatedMenuItem;
+
+  async findAll() {
+    return this.prisma.kitchenOrder.findMany();
   }
-  delete(id: any) {
-    // Simulate a database delete operation
-    return { message: `Menu item with id ${id} deleted` };
+
+  async findByStatus(status: string) {
+    return this.prisma.kitchenOrder.findMany({ where: { status } });
   }
-  findByCategory(category: any) {
-    // Simulate a database find operation by category
-    const menuItems = [
-      { id: 1, name: 'Coffee', price: 25, category: 'Beverage' },
-      { id: 2, name: 'Tea', price: 20, category: 'Beverage' },
-    ];
-    return menuItems.filter(item => item.category === category);
-  }
-  findByName(name: any) {
-    // Simulate a database find operation by name
-    const menuItems = [
-      { id: 1, name: 'Coffee', price: 25 },
-      { id: 2, name: 'Tea', price: 20 },
-    ];
-    return menuItems.filter(item => item.name === name);
-  }
-  findByPrice(price: any) {
-    // Simulate a database find operation by price
-    const menuItems = [
-      { id: 1, name: 'Coffee', price: 25 },
-      { id: 2, name: 'Tea', price: 20 },
-    ];
-    return menuItems.filter(item => item.price === price);
-  }
-  findAll() {
-    return [
-      { id: 1, name: 'Coffee', price: 25 },
-      { id: 2, name: 'Tea', price: 20 },
-      { id: 3, name: 'Juice', price: 30 },
-    ];
+
+  async createOrUpdateMenuItem(data: {
+    name: string;
+    description?: string;
+    price: number;
+    available?: boolean;
+  }) {
+    return this.prisma.menuItem.upsert({
+      where: { name: data.name },
+      update: {
+        description: data.description,
+        price: data.price,
+        available: data.available ?? true,
+      },
+      create: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        available: data.available ?? true,
+      },
+    });
   }
 }

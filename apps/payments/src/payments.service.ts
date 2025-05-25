@@ -1,38 +1,32 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class PaymentsService {
-  processPayment(payment: { orderId: number; amount: number }) {
-    return {
-      status: 'success',
-      message: `Payment of ${payment.amount} for order ${payment.orderId} processed.`,
-    };
+  constructor(private prisma: PrismaService) {}
+  async createPayment(data: {
+    orderId: number;
+    amount: number;
+    method: string;
+    transactionId?: string;
+  }) {
+    return this.prisma.payment.create({ data });
   }
-  create(data: any) {
-    return { id: Date.now(), ...data };
+
+  async getPayment(orderId: number) {
+    return this.prisma.payment.findFirst({ where: { orderId } });
   }
-  findAll() {
-    return [{ id: 1, orderId: 1, amount: 100 }];
-  }
-  findById(id: any) {
-    return { id, orderId: 1, amount: 100 };
-  }
-  update(id: any, data: any) {
-    return { id, ...data };
-  }
-  delete(id: any) {
-    return { message: `Payment with id ${id} deleted` };
-  }
-  findByOrderId(orderId: any) {
-    return [{ id: 1, orderId, amount: 100 }];
-  }
-  findByAmount(amount: any) {
-    return [{ id: 1, orderId: 1, amount }];
-  }
-  findByStatus(status: any) {
-    return [{ id: 1, orderId: 1, amount: 100, status }];
-  }
-  findByDate(date: any) {
-    return [{ id: 1, orderId: 1, amount: 100, date }];
+
+  async createInvoice(data: {
+    paymentId: number;
+    number: string;
+    details?: string;
+  }) {
+    return this.prisma.invoice.create({
+      data: {
+        ...data,
+        issuedAt: new Date(),
+      },
+    });
   }
 }

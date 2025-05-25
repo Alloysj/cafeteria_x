@@ -1,42 +1,33 @@
-import { Controller, Get } from '@nestjs/common';
-import { Menu, MenuService } from './menu.service';
-import { MessagePattern } from '@nestjs/microservices'; 
+import { Controller } from '@nestjs/common';
+import { MessagePattern } from '@nestjs/microservices';
+import { KitchenService } from './menu.service';
 
-@Controller('menu')
-export class MenuController {
-  constructor(private readonly menuService: MenuService) {}
+@Controller()
+export class KitchenController {
+  constructor(private readonly kitchenService: KitchenService) {}
 
-  @MessagePattern({ cmd: 'get_menu' })
-  getMenu(data: any) {
-    return this.menuService.findAll();
+  @MessagePattern({ cmd: 'order_created' })
+  handleNewOrder(data: { orderId: number; item: string }) {
+    return this.kitchenService.queueOrder(data);
   }
-  @MessagePattern({ cmd: 'create_menu' })
-  createMenu(data: Menu) {
-    return this.menuService.create(data);
+
+  @MessagePattern({ cmd: 'start_preparing' })
+  startPreparing(data: { orderId: number }) {
+    return this.kitchenService.updateStatus(data.orderId, 'preparing');
   }
-  @MessagePattern({ cmd: 'get_menu_by_id' })
-  getMenuById(data: any) {
-    return this.menuService.findById(data.id);
-  } 
-  @MessagePattern({ cmd: 'update_menu' })
-  updateMenu(data: Menu) {
-    return this.menuService.update(data.id, data);
+
+  @MessagePattern({ cmd: 'mark_ready' })
+  markReady(data: { orderId: number }) {
+    return this.kitchenService.updateStatus(data.orderId, 'ready');
   }
-  @MessagePattern({ cmd: 'delete_menu' })
-  deleteMenu(data: any) {
-    return this.menuService.delete(data.id);
+
+  @MessagePattern({ cmd: 'update_menu_item' })
+  updateMenuItem(data: {
+    name: string;
+    description?: string;
+    price: number;
+    available?: boolean;
+  }) {
+    return this.kitchenService.createOrUpdateMenuItem(data);
   }
-  @MessagePattern({ cmd: 'get_menu_by_category' })
-  getMenuByCategory(data: any) {
-    return this.menuService.findByCategory(data.category);
-  } 
-  @MessagePattern({ cmd: 'get_menu_by_name' })
-  getMenuByName(data: any) {
-    return this.menuService.findByName(data.name);
-  } 
-  @MessagePattern({ cmd: 'get_menu_by_price' })
-  getMenuByPrice(data: any) {
-    return this.menuService.findByPrice(data.price);
-  }
-   
 }

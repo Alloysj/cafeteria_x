@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/payments-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Payment {
+  id            Int       @id @default(autoincrement())
+  orderId       Int
+  amount        Float
+  method        String
+  status        String    @default("pending")
+  transactionId String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  invoice       Invoice?
+
+  @@map("payments")
+}
+
+model Invoice {
+  id         Int      @id @default(autoincrement())
+  paymentId  Int      @unique
+  number     String   @unique
+  issuedAt   DateTime @default(now())
+  details    String?
+
+  payment    Payment  @relation(fields: [paymentId], references: [id])
+
+  @@map("invoices")
+}
+
+

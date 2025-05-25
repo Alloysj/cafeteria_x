@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/kitchen-client"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model KitchenOrder {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId    Int
+  item       String
+  status     String   @default("queued") // 'queued' | 'preparing' | 'ready'
+  receivedAt DateTime @default(now())
+  preparedAt DateTime?
+
+  @@map("kitchen_orders")
+}
+
+model MenuItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String?
+  price       Float
+  available   Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+
+  @@map("menu_items")
+}

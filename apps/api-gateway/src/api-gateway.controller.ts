@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Inject, Get, Put, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Inject,
+  Get,
+  Put,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
@@ -17,6 +26,18 @@ export class ApiGatewayController {
     return this.ordersClient.send({ cmd: 'create_order' }, data);
   }
 
+  // Kitchen management endpoints
+  @Get('api/kitchen/menu')
+  getMenu() {
+    return this.menuClient.send({ cmd: 'get_menu' }, {});
+  }
+
+  @Post('api/kitchen/menu')
+  addOrUpdateMenuItem(@Body() data: any) {
+    return this.menuClient.send({ cmd: 'update_menu_item' }, data);
+  }
+
+  
   @Post('menu')
   addMenuItem(@Body() data: any) {
     return this.menuClient.send({ cmd: 'add_menu_item' }, data);
