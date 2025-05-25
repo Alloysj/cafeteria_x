@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
+// import { PrismaService } from '@prisma/client/orders-client';
 import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class OrdersService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: any) {
+  createOrder(data: any) {
     return this.prisma.order.create({ data });
   }
 

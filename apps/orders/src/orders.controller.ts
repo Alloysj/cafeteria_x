@@ -9,7 +9,7 @@ export class OrdersController {
   @MessagePattern({ cmd: 'create_order' })
   createOrder(data: any) {
     console.log(data, 'Received order...');
-    return this.ordersService.create(data);
+    return this.ordersService.createOrder(data);
   }
   @MessagePattern({ cmd: 'get_orders' })
   getAllOrders() {
