@@ -15,7 +15,7 @@ function App() {
           </div>
           
           <nav className="hidden md:flex space-x-8">
-            <a href="/" className="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
+            <a href="/cafeteria" className="text-gray-700 hover:text-blue-600 font-medium transition">Home</a>
             <a href="/how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition">How It Works</a>
             <a href="/restaurants" className="text-gray-700 hover:text-blue-600 font-medium transition">Restaurants</a>
             <a href="/business" className="text-gray-700 hover:text-blue-600 font-medium transition">For Businesses</a>

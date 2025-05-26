@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { IoFastFoodOutline } from "react-icons/io5";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState("");
@@ -8,21 +9,14 @@ const Login: React.FC = () => {
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    // Frontend: Handle form submission
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
 
         try {
-            // Frontend: Send login data to backend API
             const response = await axios.post("/api/login", { username, password });
-
-            // Backend: Verify credentials and return session data
             if (response.data.success) {
-                // Frontend: Store session data (e.g., token) in localStorage
                 localStorage.setItem("sessionToken", response.data.token);
-
-                // Frontend: Redirect to cafeteria homepage
                 navigate("/cafeteria");
             } else {
                 setError("Invalid username or password");
@@ -33,13 +27,34 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-                <h2 className="text-2xl font-bold text-center text-gray-800">Login</h2>
-                {error && <p className="text-sm text-red-500">{error}</p>}
+        <div 
+            className="flex items-center justify-center min-h-screen"
+            style={{
+                backgroundImage: "url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat"
+            }}
+        >
+            {/* Overlay for better text visibility */}
+            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+            
+            <div className="w-full max-w-md p-8 space-y-6 bg-white bg-opacity-90 rounded-lg shadow-xl relative z-10 backdrop-blur-sm">
+                <div className="text-center">
+                    <IoFastFoodOutline className="mx-auto text-4xl text-blue-600 mb-2" />
+                    <h2 className="text-2xl font-bold text-gray-800">Welcome to CafeteriaX</h2>
+                    <p className="text-gray-600 mt-1">Sign in to your account</p>
+                </div>
+                
+                {error && (
+                    <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
+                        {error}
+                    </div>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
                             Username
                         </label>
                         <input
@@ -47,12 +62,14 @@ const Login: React.FC = () => {
                             type="text"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Enter your username"
                             required
                         />
                     </div>
+                    
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
                             Password
                         </label>
                         <input
@@ -60,17 +77,43 @@ const Login: React.FC = () => {
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                            placeholder="Enter your password"
                             required
                         />
                     </div>
+                    
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                            <input
+                                id="remember-me"
+                                type="checkbox"
+                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+                                Remember me
+                            </label>
+                        </div>
+                        
+                        <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
+                            Forgot password?
+                        </a>
+                    </div>
+                    
                     <button
                         type="submit"
-                        className="w-full px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                        className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium rounded-lg hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-md"
                     >
                         Login
                     </button>
                 </form>
+                
+                <div className="text-center text-sm text-gray-600">
+                    Don't have an account?{" "}
+                    <a href="/register" className="font-medium text-blue-600 hover:text-blue-500">
+                        Sign up
+                    </a>
+                </div>
             </div>
         </div>
     );

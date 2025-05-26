@@ -32,11 +32,9 @@ const Home: React.FC = () => {
     "Chips & Chicken"
   ];
 
-  // Update filtered items when search or category changes
   useEffect(() => {
     let results = allFoodItems;
 
-    // Apply search filter
     if (searchQuery.trim() !== "") {
       results = results.filter(item =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,7 +42,6 @@ const Home: React.FC = () => {
       );
     }
 
-    // Apply category filter
     if (activeCategory !== "All") {
       results = results.filter(item => item.category === activeCategory);
     }
@@ -63,17 +60,17 @@ const Home: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* Header - Consistent with landing page */}
       <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <FaUtensils className="text-orange-500 text-2xl" />
-              <h1 className="text-xl font-bold text-gray-800">CafeteriaX</h1>
+              <FaUtensils className="text-blue-600 text-2xl" />
+              <h1 className="text-xl font-bold text-blue-600">MealMinder</h1>
             </div>
             <div className="flex items-center space-x-4">
               <button className="relative">
-                <FiShoppingCart className="text-2xl text-gray-600" />
+                <FiShoppingCart className="text-2xl text-blue-600" />
                 {cart.length > 0 && (
                   <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                     {cart.length}
@@ -85,23 +82,23 @@ const Home: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Search */}
-      <div className="bg-gradient-to-r from-orange-400 to-orange-500 py-6 px-4">
+      {/* Hero Search - Using primary blue gradient */}
+      <div className="bg-gradient-to-r from-blue-600 to-blue-700 py-6 px-4">
         <div className="container mx-auto">
           <div className="relative max-w-xl mx-auto">
-            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               placeholder="Search for food..."
               value={searchQuery}
               onChange={handleSearch}
-              className="w-full pl-10 pr-4 py-3 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-300"
+              className="w-full pl-10 pr-4 py-3 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
             />
           </div>
         </div>
       </div>
 
-      {/* Categories */}
+      {/* Categories - Secondary orange for food-related elements */}
       <div className="bg-white py-4 px-4 overflow-x-auto">
         <div className="container mx-auto">
           <div className="flex space-x-4">
@@ -112,7 +109,7 @@ const Home: React.FC = () => {
                 className={`px-4 py-2 rounded-full whitespace-nowrap text-sm ${
                   activeCategory === category 
                     ? 'bg-orange-500 text-white' 
-                    : 'bg-gray-100 text-gray-800'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -124,7 +121,7 @@ const Home: React.FC = () => {
 
       {/* Food Items */}
       <div className="container mx-auto px-4 py-6">
-        <h2 className="text-xl font-bold mb-4">
+        <h2 className="text-xl font-bold mb-4 text-gray-800">
           {activeCategory === "All" ? "All Menu Items" : activeCategory}
           {searchQuery && ` - Search: "${searchQuery}"`}
         </h2>
@@ -137,7 +134,7 @@ const Home: React.FC = () => {
                 setSearchQuery("");
                 setActiveCategory("All");
               }}
-              className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Reset Filters
             </button>
@@ -198,7 +195,7 @@ const Home: React.FC = () => {
         )}
       </div>
 
-      {/* Cart Drawer */}
+      {/* Cart Drawer - Consistent with primary color scheme */}
       {cart.length > 0 && (
         <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg rounded-t-lg border-t border-gray-200 z-50">
           <div className="container mx-auto px-4 py-3">
@@ -213,7 +210,7 @@ const Home: React.FC = () => {
               {cart.map((item) => (
                 <div key={item.id} className="flex justify-between items-center py-2 border-b border-gray-100">
                   <div className="flex items-center">
-                    <span className="bg-orange-100 text-orange-500 rounded-full h-6 w-6 flex items-center justify-center mr-2 text-sm">
+                    <span className="bg-blue-100 text-blue-600 rounded-full h-6 w-6 flex items-center justify-center mr-2 text-sm">
                       1
                     </span>
                     <span className="text-gray-800">{item.name}</span>
@@ -238,7 +235,7 @@ const Home: React.FC = () => {
             
             <button
               onClick={handleCheckout}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-full font-bold transition-colors"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-full font-bold transition-colors"
             >
               Checkout with M-Pesa
             </button>
