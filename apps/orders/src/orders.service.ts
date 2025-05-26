@@ -1,12 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject('MENU_SERVICE') private readonly kitchenClient: ClientProxy,
+  ) {}
 
-  createOrder(data: any) {
-    return this.prisma.order.create({ data });
+  async createOrder(data: any) {
+    const order = await this.prisma.order.create({ data });
+    // Notify kitchen service about the new order
+    this.kitchenClient.emit({ cmd: 'order_created' }, order);
+    return order;
   }
 
   findAll() {

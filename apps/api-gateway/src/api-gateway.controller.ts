@@ -42,6 +42,22 @@ export class ApiGatewayController {
     return this.menuClient.send({ cmd: 'add_menu_item' }, data);
   }
 
+  @Put('api/kitchen/order/:orderId/start')
+  startPreparing(@Param('orderId') orderId: string) {
+    return this.menuClient.send(
+      { cmd: 'start_preparing' },
+      { orderId: Number(orderId) },
+    );
+  }
+
+  @Put('api/kitchen/order/:orderId/ready')
+  markReady(@Param('orderId') orderId: string) {
+    return this.menuClient.send(
+      { cmd: 'mark_ready' },
+      { orderId: Number(orderId) },
+    );
+  }
+
   // Payment management endpoints
 
   @Post('api/payments')
@@ -59,6 +75,7 @@ export class ApiGatewayController {
 
   @Get('api/payments/:orderId')
   getPayment(@Param('orderId') orderId: string) {
+    console.log('Fetching payment for orderId:', orderId);
     return this.paymentClient.send(
       { cmd: 'get_payment' },
       { orderId: Number(orderId) },

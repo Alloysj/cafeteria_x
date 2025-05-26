@@ -1,23 +1,25 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { KitchenService } from './menu.service';
 
 @Controller()
 export class KitchenController {
   constructor(private readonly kitchenService: KitchenService) {}
 
-  @MessagePattern({ cmd: 'order_created' })
+  @EventPattern({ cmd: 'order_created' })
   handleNewOrder(data: { orderId: number; item: string }) {
     return this.kitchenService.queueOrder(data);
   }
 
   @MessagePattern({ cmd: 'start_preparing' })
   startPreparing(data: { orderId: number }) {
+    console.log(`Starting preparation for order #${data.orderId}`);
     return this.kitchenService.updateStatus(data.orderId, 'preparing');
   }
 
   @MessagePattern({ cmd: 'mark_ready' })
   markReady(data: { orderId: number }) {
+    console.log(`Marking order #${data.orderId} as ready`);
     return this.kitchenService.updateStatus(data.orderId, 'ready');
   }
 

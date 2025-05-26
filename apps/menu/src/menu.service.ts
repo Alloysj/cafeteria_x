@@ -4,8 +4,19 @@ import { PrismaService } from './prisma.service';
 @Injectable()
 export class KitchenService {
   constructor(private readonly prisma: PrismaService) {}
+  /**
+   * Queues an order in the kitchen.
+   * @param order - The order details to queue.
+   * @returns The created kitchen order record.
+   */
+  async queueOrder(order: {
+    orderId: number;
+    item: string;
+  }) {
+    console.log(
+      `✅ Kitchen received order #${order.orderId} for item "${order.item}"`,
+    );
 
-  async queueOrder(order: { orderId: number; item: string }) {
     return this.prisma.kitchenOrder.create({
       data: {
         orderId: order.orderId,

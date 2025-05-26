@@ -7,11 +7,13 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../../../node_modules/@prisma/orders-client"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["payments", "orders"]
 }
 
 model Order {
@@ -24,5 +26,6 @@ model Order {
   createdAt     DateTime @default(now()) @map("created_at")
 
   @@map("orders") // <== THIS maps to the lowercase table you created manually
+  @@schema("orders")
 }
 

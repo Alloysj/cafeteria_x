@@ -18,6 +18,10 @@ export class PaymentsController {
 
   @MessagePattern({ cmd: 'get_payment' })
   getPayment(data: { orderId: number }) {
+    console.log('Fetching payment for orderId:', data.orderId);
+    if (!data.orderId) { 
+      throw new Error('Order ID is required to fetch payment details');
+    }
     return this.paymentService.getPayment(data.orderId);
   }
 
