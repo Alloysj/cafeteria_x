@@ -1,10 +1,13 @@
-import { Controller } from '@nestjs/common';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
+import { Controller, Inject } from '@nestjs/common';
+import { ClientProxy, EventPattern, MessagePattern } from '@nestjs/microservices';
 import { KitchenService } from './menu.service';
 
 @Controller()
 export class KitchenController {
-  constructor(private readonly kitchenService: KitchenService) {}
+  constructor(
+    private readonly kitchenService: KitchenService,
+    @Inject('ORDERS_SERVICE') private readonly ordersClient: ClientProxy,
+  ) {}
 
   @EventPattern({ cmd: 'order_created' })
   handleNewOrder(data: { orderId: number; item: string }) {
@@ -18,9 +21,17 @@ export class KitchenController {
   }
 
   @MessagePattern({ cmd: 'mark_ready' })
-  markReady(data: { orderId: number }) {
+  async markReady(data: { orderId: number }) {
     console.log(`Marking order #${data.orderId} as ready`);
-    return this.kitchenService.updateStatus(data.orderId, 'ready');
+    const result = await this.kitchenService.updateStatus(
+      data.orderId,
+      'ready',
+    );
+    this.ordersClient.emit(
+      { cmd: 'update_order' },
+      { id: data.orderId, status: 'ready' },
+    );
+    return result;
   }
 
   @MessagePattern({ cmd: 'update_menu_item' })
