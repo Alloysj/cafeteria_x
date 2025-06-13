@@ -14,12 +14,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  Queued
+  InProgress
+  Ready
+  Completed
+}
+
 model Payment {
   id            Int       @id @default(autoincrement())
   orderId       Int
   amount        Float
   method        String
-  status        String    @default("pending")
+  status        OrderStatus @default(Queued)
   transactionId String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

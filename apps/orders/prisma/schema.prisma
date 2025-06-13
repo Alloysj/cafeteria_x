@@ -16,11 +16,18 @@ datasource db {
   schemas  = ["payments", "orders"]
 }
 
+enum OrderStatus {
+  Queued
+  InProgress
+  Ready
+  Completed
+}
+
 model Order {
   id            Int      @id @default(autoincrement())
   customerId    Int      @map("customer_id")
   item          String
-  status        String
+  status        OrderStatus @default(Queued)
   totalAmount   Float    @map("total_amount")
   paymentMethod String   @map("payment_method")
   createdAt     DateTime @default(now()) @map("created_at")

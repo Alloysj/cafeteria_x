@@ -1,6 +1,7 @@
 import { Controller } from '@nestjs/common';
 import { EventPattern, MessagePattern } from '@nestjs/microservices';
 import { KitchenService } from './menu.service';
+import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Controller()
 export class KitchenController {
@@ -14,13 +15,13 @@ export class KitchenController {
   @MessagePattern({ cmd: 'start_preparing' })
   startPreparing(data: { orderId: number }) {
     console.log(`Starting preparation for order #${data.orderId}`);
-    return this.kitchenService.updateStatus(data.orderId, 'preparing');
+    return this.kitchenService.updateStatus(data.orderId, OrderStatus.InProgress);
   }
 
   @MessagePattern({ cmd: 'mark_ready' })
   markReady(data: { orderId: number }) {
     console.log(`Marking order #${data.orderId} as ready`);
-    return this.kitchenService.updateStatus(data.orderId, 'ready');
+    return this.kitchenService.updateStatus(data.orderId, OrderStatus.Ready);
   }
 
   @MessagePattern({ cmd: 'update_menu_item' })
