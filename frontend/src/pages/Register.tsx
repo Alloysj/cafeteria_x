@@ -263,7 +263,7 @@ const Register: React.FC = () => {
                     <button 
                         onClick={() => navigate('/login')}
                         className="font-medium text-blue-600 hover:text-blue-500"
-                    >
+                    > 
                         Sign in
                     </button>
                 </div>
