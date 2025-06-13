@@ -1,11 +1,12 @@
 import React from "react";
 
 import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
-  const { logout } = useLogout();
+  const { logout } = logout();
 
   const handleLogout = () => {
     logout();

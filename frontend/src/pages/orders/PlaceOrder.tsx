@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/useCart';
-import { useOrders, OrderItem } from '../../hooks/useOrders';
+import { useOrders, type OrderItem } from '../../hooks/useOrders';
 
 const PlaceOrder: React.FC = () => {
   const { cart, removeFromCart, clearCart, total } = useCart();

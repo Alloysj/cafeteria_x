@@ -1,5 +1,5 @@
 import React from 'react';
-import { Order } from '../hooks/useOrders';
+import type { Order } from '../hooks/useOrders';
 
 interface Props {
   order: Order;
