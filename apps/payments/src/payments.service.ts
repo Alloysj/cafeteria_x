@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Injectable()
 export class PaymentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject('ORDERS_SERVICE') private readonly ordersClient: ClientProxy,
+  ) {}
   async createPayment(data: {
     orderId: number;
     amount: number;
     method: string;
     transactionId?: string;
   }) {
-    return this.prisma.payment.create({ data });
+    const payment = await this.prisma.payment.create({ data });
+    // Notify orders service that the payment has been confirmed
+    this.ordersClient.emit({ cmd: 'payment_confirmed' }, payment);
+    return payment;
   }
 
   async getPayment(orderId: number) {
