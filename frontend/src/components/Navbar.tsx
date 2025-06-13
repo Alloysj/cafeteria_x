@@ -2,7 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
+const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
+
+  return (
     <nav className="bg-gray-800 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
         <Link to="/" className="font-bold text-lg">
@@ -29,9 +32,11 @@ import useAuth from '../hooks/useAuth';
             </>
           )}
           {user ? (
-              <button onClick={logout} className="hover:underline">
+            <li>
+              <button onClick={logout} className="hover:underline bg-transparent border-none cursor-pointer">
                 Logout
               </button>
+            </li>
           ) : (
             <>
               <li>
@@ -48,15 +53,8 @@ import useAuth from '../hooks/useAuth';
           )}
         </ul>
       </div>
-};
-
-export default Navbar;
-
-              <Link to="/register">Register</Link>
-            </li>
-          </>
-        )}
-      </ul>
     </nav>
   );
 };
+
+export default Navbar;
