@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useApi from './useApi';
 
 export interface OrderItem {
   id: number;
@@ -15,34 +16,43 @@ export interface Order {
 }
 
 export const useOrders = () => {
-  const [orders, setOrders] = useState<Order[]>(() => {
-    const stored = localStorage.getItem('orders');
-    return stored ? JSON.parse(stored) : [];
-  });
+  const { get, post } = useApi();
+  const [orders, setOrders] = useState<Order[]>([]);
 
-  const persist = (data: Order[]) => {
-    setOrders(data);
-    localStorage.setItem('orders', JSON.stringify(data));
-  };
-
-  const placeOrder = (items: OrderItem[]) => {
-    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const newOrder: Order = {
-      id: Date.now(),
-      items,
-      total,
-      paid: false,
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const data = await get<Order[]>(`/api/orders`);
+        setOrders(data);
+      } catch (err) {
+        console.error('Failed to load orders', err);
+      }
     };
-    const updated = [...orders, newOrder];
-    persist(updated);
+    fetchOrders();
+  }, [get]);
+
+  const placeOrder = async (items: OrderItem[]) => {
+    const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const newOrder = await post<Order>('/api/orders/create', { items, total });
+    setOrders((prev) => [...prev, newOrder]);
     return newOrder;
   };
 
-  const getOrderById = (id: number) => orders.find((o) => o.id === id);
+  const getOrderById = async (id: number) => {
+    try {
+      return await get<Order>(`/api/orders/${id}`);
+    } catch (err) {
+      console.error('Failed to fetch order', err);
+      return undefined;
+    }
+  };
 
-  const payOrder = (id: number) => {
-    const updated = orders.map((o) => (o.id === id ? { ...o, paid: true } : o));
-    persist(updated);
+  const payOrder = async (id: number, amount: number) => {
+    try {
+      await post('/api/payments', { orderId: id, amount, method: 'cash' });
+    } catch (err) {
+      console.error('Failed to process payment', err);
+    }
   };
 
   return { orders, placeOrder, payOrder, getOrderById };

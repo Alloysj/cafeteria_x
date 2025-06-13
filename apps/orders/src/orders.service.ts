@@ -8,12 +8,15 @@ export class OrdersService {
   constructor(
     private prisma: PrismaService,
     @Inject('MENU_SERVICE') private readonly kitchenClient: ClientProxy,
+    @Inject('PAYMENT_SERVICE') private readonly paymentClient: ClientProxy,
   ) {}
 
   async createOrder(data: any) {
     const order = await this.prisma.order.create({ data });
     // Notify kitchen service about the new order
     this.kitchenClient.emit({ cmd: 'order_created' }, order);
+    // Trigger billing process for the order
+    this.paymentClient.emit({ cmd: 'initiate_billing' }, order);
     return order;
   }
 

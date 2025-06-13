@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Injectable()
 export class PaymentsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    @Inject('ORDERS_SERVICE') private readonly ordersClient: ClientProxy,
+  ) {}
   async createPayment(data: {
     orderId: number;
     amount: number;

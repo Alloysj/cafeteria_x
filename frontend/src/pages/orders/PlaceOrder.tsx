@@ -8,7 +8,7 @@ const PlaceOrder: React.FC = () => {
   const { placeOrder } = useOrders();
   const navigate = useNavigate();
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     if (cart.length === 0) return;
     const items: OrderItem[] = cart.map((c) => ({
       id: c.id,
@@ -16,7 +16,7 @@ const PlaceOrder: React.FC = () => {
       price: c.price,
       quantity: 1,
     }));
-    const order = placeOrder(items);
+    const order = await placeOrder(items);
     clearCart();
     navigate(`/orders/${order.id}/summary`);
   };
