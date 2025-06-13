@@ -14,11 +14,18 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum OrderStatus {
+  Queued
+  InProgress
+  Ready
+  Completed
+}
+
 model KitchenOrder {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   orderId    Int
   item       String
-  status     String   @default("queued") // 'queued' | 'preparing' | 'ready'
+  status     OrderStatus @default(Queued)
   receivedAt DateTime @default(now())
   preparedAt DateTime?
 

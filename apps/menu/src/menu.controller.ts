@@ -1,6 +1,7 @@
 import { Controller, Inject } from '@nestjs/common';
 import { ClientProxy, EventPattern, MessagePattern } from '@nestjs/microservices';
 import { KitchenService } from './menu.service';
+import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Controller()
 export class KitchenController {
@@ -17,12 +18,15 @@ export class KitchenController {
   @MessagePattern({ cmd: 'start_preparing' })
   startPreparing(data: { orderId: number }) {
     console.log(`Starting preparation for order #${data.orderId}`);
-    return this.kitchenService.updateStatus(data.orderId, 'preparing');
+    return this.kitchenService.updateStatus(data.orderId, OrderStatus.InProgress);
   }
 
   @MessagePattern({ cmd: 'mark_ready' })
   async markReady(data: { orderId: number }) {
     console.log(`Marking order #${data.orderId} as ready`);
+<<<<<<< codex/create-shared-order-status-enum
+    return this.kitchenService.updateStatus(data.orderId, OrderStatus.Ready);
+=======
     const result = await this.kitchenService.updateStatus(
       data.orderId,
       'ready',
@@ -32,6 +36,7 @@ export class KitchenController {
       { id: data.orderId, status: 'ready' },
     );
     return result;
+>>>>>>> main
   }
 
   @MessagePattern({ cmd: 'update_menu_item' })

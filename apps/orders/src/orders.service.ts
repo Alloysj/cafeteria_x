@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { ClientProxy } from '@nestjs/microservices';
+import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Injectable()
 export class OrdersService {
@@ -39,7 +40,7 @@ export class OrdersService {
     return this.prisma.order.findMany({ where: { customerId } });
   }
 
-  findByStatus(status: string) {
+  findByStatus(status: OrderStatus) {
     return this.prisma.order.findMany({ where: { status } });
   }
 

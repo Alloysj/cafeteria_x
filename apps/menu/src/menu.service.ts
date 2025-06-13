@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
+import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Injectable()
 export class KitchenService {
@@ -21,15 +22,18 @@ export class KitchenService {
       data: {
         orderId: order.orderId,
         item: order.item,
-        status: 'queued',
+        status: OrderStatus.Queued,
       },
     });
   }
 
-  async updateStatus(orderId: number, status: 'preparing' | 'ready') {
+  async updateStatus(orderId: number, status: OrderStatus) {
     return this.prisma.kitchenOrder.updateMany({
       where: { orderId },
-      data: { status, preparedAt: status === 'ready' ? new Date() : undefined },
+      data: {
+        status,
+        preparedAt: status === OrderStatus.Ready ? new Date() : undefined,
+      },
     });
   }
 
@@ -37,7 +41,7 @@ export class KitchenService {
     return this.prisma.kitchenOrder.findMany();
   }
 
-  async findByStatus(status: string) {
+  async findByStatus(status: OrderStatus) {
     return this.prisma.kitchenOrder.findMany({ where: { status } });
   }
 

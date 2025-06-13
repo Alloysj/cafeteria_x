@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
-import { ClientProxy } from '@nestjs/microservices';
+import { OrderStatus } from '../../libs/common/order-status.enum';
 
 @Injectable()
 export class PaymentsService {
@@ -13,11 +13,14 @@ export class PaymentsService {
     amount: number;
     method: string;
     transactionId?: string;
+    status?: OrderStatus;
   }) {
-    const payment = await this.prisma.payment.create({ data });
-    // Notify orders service that the payment has been confirmed
-    this.ordersClient.emit({ cmd: 'payment_confirmed' }, payment);
-    return payment;
+    return this.prisma.payment.create({
+      data: {
+        ...data,
+        status: data.status ?? OrderStatus.Queued,
+      },
+    });
   }
 
   async getPayment(orderId: number) {
