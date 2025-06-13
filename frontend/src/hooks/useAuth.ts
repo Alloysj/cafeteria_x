@@ -1,12 +1,6 @@
-import React from "react";
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
-const AuthContext = React.createContext({
-  user: null, 
-    login: (username: string, password: string) => Promise<void>,
-    logout: () => Promise<void>,
-    register: (username: string, password: string) => Promise<void>,
-    isLoading: false,
-    error: null,
-});
+const useAuth = () => useContext(AuthContext);
 
-export default AuthContext;
+export default useAuth;

@@ -1,28 +1,24 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 import { IoFastFoodOutline } from "react-icons/io5";
 
 const Login: React.FC = () => {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const { login, error: authError } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
 
-        try {
-            const response = await axios.post("/api/login", { username, password });
-            if (response.data.success) {
-                localStorage.setItem("sessionToken", response.data.token);
-                navigate("/cafeteria");
-            } else {
-                setError("Invalid username or password");
-            }
-        } catch (err) {
-            setError("An error occurred. Please try again.");
+        const success = await login(email, password);
+        if (success) {
+            navigate('/cafeteria');
+        } else {
+            setError('Invalid credentials');
         }
     };
 
@@ -46,24 +42,24 @@ const Login: React.FC = () => {
                     <p className="text-gray-600 mt-1">Sign in to your account</p>
                 </div>
                 
-                {error && (
+                {(error || authError) && (
                     <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
-                        {error}
+                        {error || authError}
                     </div>
                 )}
                 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">
-                            Username
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                            Email
                         </label>
                         <input
-                            id="username"
-                            type="text"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            id="email"
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                            placeholder="Enter your username"
+                            placeholder="Enter your email"
                             required
                         />
                     </div>

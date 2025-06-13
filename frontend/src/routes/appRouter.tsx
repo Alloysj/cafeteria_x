@@ -8,11 +8,15 @@ import PrivateRoute from "./privateRoute";
 import AdminDashboard from "../pages/dashboard/AdminDashboard";
 import StaffDashboard from "../pages/dashboard/StaffDashboard";
 import Orders from "../pages/orders/Orders";
+import PlaceOrder from "../pages/orders/PlaceOrder";
+import OrderSummary from "../pages/orders/OrderSummary";
+import PayOrder from "../pages/orders/PayOrder";
+import OrderHistory from "../pages/orders/OrderHistory";
 import App from "../App"; // Assuming you have an App component for the main layout
 
 const AppRouter: React.FC = () => {
     const isAuthenticated = true; // Replace with actual authentication logic
-    const userRole = "staff"; // Replace with actual role logic (e.g., "user", "staff", "admin")
+    const userRole = "user"; // Replace with actual role logic (e.g., "user", "staff", "admin")
 
     return (
         <Router>
@@ -37,7 +41,10 @@ const AppRouter: React.FC = () => {
                 <Route
                     element={<PrivateRoute isAuthenticated={isAuthenticated} role={userRole} allowedRoles={["user"]} />}
                 >
-                    <Route path="/user/orders" element={<Orders />} />
+                    <Route path="/orders/new" element={<PlaceOrder />} />
+                    <Route path="/orders/:id/summary" element={<OrderSummary />} />
+                    <Route path="/orders/:id/pay" element={<PayOrder />} />
+                    <Route path="/orders/history" element={<OrderHistory />} />
                 </Route>
 
                 <Route path="*" element={<NotFound />} />

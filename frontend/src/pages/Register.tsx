@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import zxcvbn from "zxcvbn";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { IoFastFoodOutline } from "react-icons/io5";
-import api from "../utils/api";
+import useAuth from '../hooks/useAuth';
 
 const Register: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -18,6 +18,7 @@ const Register: React.FC = () => {
     const [error, setError] = useState("");
     const [passwordStrength, setPasswordStrength] = useState(0);
     const navigate = useNavigate();
+    const { register: registerUser, error: authError } = useAuth();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -43,15 +44,15 @@ const Register: React.FC = () => {
             return;
         }
 
-        try {
-            const response = await api.post("/api/register", formData);
-            if (response.data.success) {
-                navigate("/login");
-            } else {
-                setError(response.data.message || "An error occurred during registration.");
-            }
-        } catch (err) {
-            setError("An error occurred. Please try again.");
+        const success = await registerUser({
+            email: formData.email,
+            password: formData.password,
+            name: formData.firstname,
+        });
+        if (success) {
+            navigate('/login');
+        } else {
+            setError(authError || 'Registration failed');
         }
     };
 
@@ -75,9 +76,9 @@ const Register: React.FC = () => {
                     <p className="text-gray-600 mt-1">Join us to start ordering delicious meals</p>
                 </div>
                 
-                {error && (
+                {(error || authError) && (
                     <div className="p-3 bg-red-100 text-red-700 rounded-md text-sm">
-                        {error}
+                        {error || authError}
                     </div>
                 )}
                 
@@ -273,3 +274,4 @@ const Register: React.FC = () => {
 };
 
 export default Register;
+
